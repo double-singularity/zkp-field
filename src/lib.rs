@@ -42,3 +42,30 @@ impl fmt::Display for FieldElement {
         write!(f, "{}", self.value)
     }
 }
+
+#[cfg(test)]
+mod test {
+    use super::*;
+
+
+
+    #[test]
+    fn test_creation_and_modulo() {
+        let a = FieldElement::new(5);
+        assert_eq!(a.value(), 5);
+
+        let b = FieldElement::new(20);
+        assert_eq!(b.value(), 3);
+
+        let c = FieldElement::new(17);
+        assert_eq!(c.value(), 0);
+    }
+
+    #[test]
+    fn test_equality() {
+        let a = FieldElement::new(20);
+        let b = FieldElement::new(3);
+
+        assert_eq!(a.value(), b.value());
+    }
+}
