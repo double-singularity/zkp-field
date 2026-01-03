@@ -39,6 +39,16 @@ impl Add for FieldElement {
     }
 }
 
+use std::ops::Sub;
+
+impl Sub for FieldElement {
+    type Output = Self;
+
+    fn sub(self, other: Self) -> Self {
+        FieldElement::new(self.value() + MODULUS - other.value())
+    }
+}
+
 use std::fmt;
 
 impl fmt::Display for FieldElement {
@@ -50,8 +60,6 @@ impl fmt::Display for FieldElement {
 #[cfg(test)]
 mod test {
     use super::*;
-
-
 
     #[test]
     fn test_creation_and_modulo() {
@@ -83,5 +91,25 @@ mod test {
         assert_eq!((a + b).value(), 1);
         assert_eq!((c + d).value(), 4);
         assert_eq!((b + c).value(), 2);
+    }
+
+    #[test]
+    fn test_subtract_func() {
+        let a = FieldElement::new(1);
+        let b = FieldElement::new(2);
+
+        assert_eq!((a - b).value(), 16);
+
+        let c = FieldElement::new(5);
+
+        assert_eq!((c - b).value(), 3);
+
+        let d = FieldElement::new(17);
+
+        assert_eq!((a - d).value(), 1);
+        assert_eq!((b - d).value(), 2);
+
+        let e = FieldElement::new(0);
+        assert_eq!((e - d).value(), 0);
     }
 }
