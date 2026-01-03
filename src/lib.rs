@@ -17,24 +17,28 @@ pub struct FieldElement {
 }
 
 impl FieldElement {
-    // 3. The Constructor
-    // We don't just take the number; we modulo it immediately.
-    // This ensures a FieldElement is NEVER invalid.
-    // Example: FieldElement::new(20) -> stores 3
+
     pub fn new(value: u64) -> Self {
         Self {
             value: value % MODULUS,
         }
     }
 
-    // A helper to see the inner value (useful for tests)
     pub fn value(&self) -> u64 {
         self.value
     }
 }
 
-// 4. Implement "Display"
-// This lets us use println!("{}", f); smoothly.
+use std::ops::Add;
+
+impl Add for FieldElement {
+    type Output = Self;
+    
+    fn add(self, other: Self) -> Self {
+        FieldElement::new(self.value() + other.value())
+    }
+}
+
 use std::fmt;
 
 impl fmt::Display for FieldElement {
@@ -67,5 +71,17 @@ mod test {
         let b = FieldElement::new(3);
 
         assert_eq!(a.value(), b.value());
+    }
+
+    #[test]
+    fn test_add_func() {
+        let a = FieldElement::new(17);
+        let b = FieldElement::new(1);
+        let c = FieldElement::new(18);
+        let d = FieldElement::new(3);
+
+        assert_eq!((a + b).value(), 1);
+        assert_eq!((c + d).value(), 4);
+        assert_eq!((b + c).value(), 2);
     }
 }
